@@ -23,10 +23,10 @@ cursor.execute('''
         url text NOT NULL,
         count integer NOT NULL);
 ''')
-
+print ('Downloading datafile:')
 os.system('axel -o data.csv {0}'.format(url))
-print ('Copying data to db')
+print ('Copying data to db:')
 with open('data.csv', 'r') as f:
-    result = cursor.copy_from(f, 'test', sep=',')
+    cursor.copy_from(f, 'test', sep=',')
 conn.commit()
-
+print('Done')
