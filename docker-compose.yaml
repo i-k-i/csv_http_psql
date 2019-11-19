@@ -1,0 +1,36 @@
+version: "3.4"
+
+services:
+
+  postgres:
+    image: postgres:11.5-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"
+    restart: on-failure
+
+  db_filler:
+    build: .
+    command: sh -c 'tail -f /dev/null'
+    container_name: db_filler
+    network_mode: host
+    image: db_filler_img
+    environment:
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_DB=postgres
+      - DB_HOST=postgres
+    depends_on:
+      - postgres
+    volumes:
+      - data:/data/db_filler
+
+volumes:
+  postgres_data:
+  data:
+  
